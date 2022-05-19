@@ -1,0 +1,83 @@
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\OMS.exe.config
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\OMS.exe
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\OMS.pdb
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.csproj.AssemblyReference.cache
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.Form1.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.Properties.Resources.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.csproj.GenerateResource.cache
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.csproj.CoreCompileInputs.cache
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.exe
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.pdb
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCClientManagement.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.exe.licenses
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Telerik.WinControls.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Telerik.WinControls.UI.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\TelerikCommon.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Telerik.WinControls.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Telerik.WinControls.UI.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.csproj.CopyComplete
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCInsertOrder.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCStatement.resources
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\OMS.exe.config
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\OMS.exe
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\OMS.pdb
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Telerik.WinControls.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Telerik.WinControls.UI.xml
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.csprojAssemblyReference.cache
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.Form1.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.Properties.Resources.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.UserControls.UCClientInsert.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.UserControls.UCClientManagement.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.UserControls.UCInsertOrder.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.UserControls.UCStatement.resources
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.csproj.GenerateResource.cache
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.exe.licenses
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.csproj.CoreCompileInputs.cache
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.csproj.CopyComplete
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.exe
+C:\Users\benji\Desktop\OMS\OMS\obj\Debug\OMS.pdb
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Google.Protobuf.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\MySql.Data.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Buffers.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Memory.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Ubiety.Dns.Core.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\ZstdNet.dll
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Google.Protobuf.pdb
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\Google.Protobuf.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\MySql.Data.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Buffers.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Memory.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\benji\Desktop\OMS\OMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\BouncyCastle.Crypto.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Google.Protobuf.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Compression.LZ4.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Compression.LZ4.Streams.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Hash.xxHash.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\MySql.Data.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Buffers.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Memory.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Numerics.Vectors.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Ubiety.Dns.Core.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\ZstdNet.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Google.Protobuf.pdb
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\Google.Protobuf.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Compression.LZ4.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Compression.LZ4.Streams.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\K4os.Hash.xxHash.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\MySql.Data.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Buffers.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Memory.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Numerics.Vectors.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCClientInsert.resources
