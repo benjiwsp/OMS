@@ -29,8 +29,12 @@ namespace OMS.UserControls
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.ClientListCbox = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.SearchClientBtn = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -57,23 +61,20 @@ namespace OMS.UserControls
             this.label5 = new System.Windows.Forms.Label();
             this.CreditTxt = new System.Windows.Forms.MaskedTextBox();
             this.importFromExcelBtn = new System.Windows.Forms.Button();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radSeparator1)).BeginInit();
             this.panel1.SuspendLayout();
             this.ClientPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // ClientListCbox
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(105, 31);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(318, 21);
-            this.comboBox1.TabIndex = 0;
+            this.ClientListCbox.FormattingEnabled = true;
+            this.ClientListCbox.Location = new System.Drawing.Point(105, 31);
+            this.ClientListCbox.Name = "ClientListCbox";
+            this.ClientListCbox.Size = new System.Drawing.Size(318, 21);
+            this.ClientListCbox.TabIndex = 0;
+            this.ClientListCbox.SelectedIndexChanged += new System.EventHandler(this.ClientListCbox_SelectedIndexChanged);
             // 
             // dataGridView1
             // 
@@ -93,6 +94,26 @@ namespace OMS.UserControls
             this.dataGridView1.Size = new System.Drawing.Size(415, 819);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "代號";
+            this.Column2.Name = "Column2";
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "客戶";
+            this.Column1.Name = "Column1";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "貨款";
+            this.Column3.Name = "Column3";
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "更改";
+            this.Column4.Name = "Column4";
             // 
             // label1
             // 
@@ -411,26 +432,6 @@ namespace OMS.UserControls
             this.importFromExcelBtn.UseVisualStyleBackColor = true;
             this.importFromExcelBtn.Click += new System.EventHandler(this.importFromExcelBtn_Click);
             // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "代號";
-            this.Column2.Name = "Column2";
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "客戶";
-            this.Column1.Name = "Column1";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "貨款";
-            this.Column3.Name = "Column3";
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "更改";
-            this.Column4.Name = "Column4";
-            // 
             // UCClientInsert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -446,7 +447,7 @@ namespace OMS.UserControls
             this.Controls.Add(this.SearchClientBtn);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.ClientListCbox);
             this.Name = "UCClientInsert";
             this.Size = new System.Drawing.Size(1765, 1035);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -461,7 +462,7 @@ namespace OMS.UserControls
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox ClientListCbox;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button SearchClientBtn;

@@ -49,6 +49,7 @@ namespace OMS.UserControls
         public UCClientInsert()
         {
             InitializeComponent();
+            getClientTypeList();
         }
 
         private void clientNameTxt_TextChanged(object sender, EventArgs e)
@@ -227,6 +228,21 @@ namespace OMS.UserControls
             }
             DBConnection.disconnDB();
         }
+        private void getClientTypeList()
+        {
+            cmd = new MySqlCommand("SELECT DISTINCT CLIENT_TYPE from CLIENT", myConn);
+            DBConnection.connDB();
+            rdr = cmd.ExecuteReader();
+            if (rdr.HasRows == true)
+            {
+                while (rdr.Read())
+                {
+                    ClientListCbox.Items.Add(rdr["CLIENT_TYPE"].ToString());
+                }
+                rdr.Close();
+            }
+            DBConnection.disconnDB();
+        }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             enablePanel(true);
@@ -259,6 +275,23 @@ namespace OMS.UserControls
                 DBConnection.disconnDB();
                 //TODO - Button Clicked - Execute Code Here
             }
+        }
+
+        private void ClientListCbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          string cSelected =  ClientListCbox.SelectedItem.ToString();
+            cmd = new MySqlCommand($"SELECT CLIENT_ID, CLIENT_NAME, CREDIT from CLIENT where CLIENT_TYPE = '{cSelected}'", myConn);
+            DBConnection.connDB();
+            rdr = cmd.ExecuteReader();
+            if (rdr.HasRows == true)
+            {
+                while (rdr.Read())
+                {
+                    dataGridView1.Rows.Add(rdr["CLIENT_ID"].ToString(), rdr["CLIENT_NAME"].ToString(), rdr["CREDIT"].ToString(), "更改");
+                }
+                rdr.Close();
+            }
+            DBConnection.disconnDB();
         }
     }
 }
