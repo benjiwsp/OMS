@@ -81,3 +81,13 @@ E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Memory.xml
 E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Numerics.Vectors.xml
 E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCClientInsert.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.UserControls.UCCheckOrder.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.FrmPopup.resources
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\PdfSharp.Charting.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\PdfSharp.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\PdfSharp.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\PdfSharp.Charting.xml
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\de\PdfSharp.resources.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\de\PdfSharp.Charting.resources.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\bin\Debug\itextsharp.dll
+E:\Development\bdev\Chiu - OMS\OMS\OMS\obj\Debug\OMS.InputBox.resources

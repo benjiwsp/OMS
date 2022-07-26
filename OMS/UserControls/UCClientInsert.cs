@@ -77,12 +77,13 @@ namespace OMS.UserControls
             cmd = new MySqlCommand($"insert into CLIENT (CLIENT_ID,CLIENT_NAME,ADDRESS,TEL,CONTACT_PERSON,CREDIT, CLIENT_TYPE,MODIFY_TIME) values('{ _code }','{_name}','{_add}','{_tel}','{_contact}','{_credit}','{_clientType}','{now}')", myConn);
             DBConnection.connDB();
             cmd.ExecuteNonQuery();
-         
+
             DBConnection.disconnDB();
-       
+
         }
 
-        private bool fieldValidation(){
+        private bool fieldValidation()
+        {
             bool isValid = true;
             if (clientCode.Length <= 0)
                 isValid = false;
@@ -129,10 +130,11 @@ namespace OMS.UserControls
         }
         private void ConfirmBtn_Click(object sender, EventArgs e)
         {
-            if (fieldValidation()) { 
-            insertClientToDb(clientName, clientCode, clientType, tel, address, credit, contact);
-            clearControl();
-            enablePanel(false);
+            if (fieldValidation())
+            {
+                insertClientToDb(clientName, clientCode, clientType, tel, address, credit, contact);
+                clearControl();
+                enablePanel(false);
             }
             else
             {
@@ -215,6 +217,7 @@ namespace OMS.UserControls
 
         private void SearchClientBtn_Click(object sender, EventArgs e)
         {
+            dataGridView1.Rows.Clear();
             cmd = new MySqlCommand("SELECT CLIENT_ID, CLIENT_NAME, CREDIT from CLIENT", myConn);
             DBConnection.connDB();
             rdr = cmd.ExecuteReader();
@@ -246,7 +249,7 @@ namespace OMS.UserControls
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             enablePanel(true);
-               var senderGrid = (DataGridView)sender;
+            var senderGrid = (DataGridView)sender;
 
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
                 e.RowIndex >= 0)
@@ -266,7 +269,7 @@ namespace OMS.UserControls
                         CreditTxt.Text = rdr["CREDIT"].ToString();
                         TelTxt.Text = rdr["TEL"].ToString();
                         ContactTxt.Text = rdr["CONTACT_PERSON"].ToString();
-                       ClientTypeCombo.SelectedIndex = ClientTypeCombo.FindString(rdr["CLIENT_TYPE"].ToString());
+                        ClientTypeCombo.SelectedIndex = ClientTypeCombo.FindString(rdr["CLIENT_TYPE"].ToString());
 
                         //  dataGridView1.Rows.Add(rdr["CLIENT_ID"].ToString(), rdr["CLIENT_NAME"].ToString(), rdr["CREDIT"].ToString(), "更改");
                     }
@@ -279,7 +282,8 @@ namespace OMS.UserControls
 
         private void ClientListCbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-          string cSelected =  ClientListCbox.SelectedItem.ToString();
+            dataGridView1.Rows.Clear();
+            string cSelected = ClientListCbox.SelectedItem.ToString();
             cmd = new MySqlCommand($"SELECT CLIENT_ID, CLIENT_NAME, CREDIT from CLIENT where CLIENT_TYPE = '{cSelected}'", myConn);
             DBConnection.connDB();
             rdr = cmd.ExecuteReader();

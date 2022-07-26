@@ -16,7 +16,8 @@ namespace OMS
 
         UCStatement UCstatement = new UCStatement();
         UCClientInsert UCClient = new UCClientInsert();
-        UCInsertOrder UCOrder = new UCInsertOrder();
+        UCCheckOrder UCOrder = new UCCheckOrder();
+        UCInsertOrder UCInsert = new UCInsertOrder();
         UCClientManagement UCClientMgm = new UCClientManagement();
         List<UserControl> controlList = new List<UserControl>();
         public Form1()
@@ -33,7 +34,6 @@ namespace OMS
         private void button1_Click(object sender, EventArgs e)
         {
             //  mainPanel.Controls.Clear();
-            updatePanel(UCstatement);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -50,21 +50,37 @@ namespace OMS
 
         }
 
-        private void InsertOrderBtn_Click(object sender, EventArgs e)
+        private void CheckOrderBtn_Click(object sender, EventArgs e)
         {
             updatePanel(UCOrder);
         }
 
         private void updatePanel(UserControl usercon)
         {
+            try { 
             foreach (UserControl uc in controlList)
             {
                 mainPanel.Controls.Remove(uc);
+                    mainPanel.Controls.Clear();
             }
             mainPanel.Controls.Add(usercon);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            updatePanel(UCInsert);
 
         }
 
-     
+        private void CreateInvoiceBtn_Click(object sender, EventArgs e)
+        {
+            updatePanel(UCstatement);
+
+        }
     }
 }

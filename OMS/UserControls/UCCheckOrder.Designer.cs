@@ -1,7 +1,7 @@
 ﻿
 namespace OMS.UserControls
 {
-    partial class UCInsertOrder
+    partial class UCCheckOrder
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,13 +29,15 @@ namespace OMS.UserControls
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.orderGrid = new System.Windows.Forms.DataGridView();
             this.KtBtn = new System.Windows.Forms.Button();
             this.CWBtn = new System.Windows.Forms.Button();
+            this.ClearBtn = new System.Windows.Forms.Button();
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.label1 = new System.Windows.Forms.Label();
+            this.monthCalendar2 = new System.Windows.Forms.MonthCalendar();
             ((System.ComponentModel.ISupportInitialize)(this.orderGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -43,23 +45,23 @@ namespace OMS.UserControls
             // 
             this.orderGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.orderGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.orderGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.orderGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.orderGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.orderGrid.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.orderGrid.DefaultCellStyle = dataGridViewCellStyle2;
             this.orderGrid.Location = new System.Drawing.Point(356, 3);
             this.orderGrid.Name = "orderGrid";
             this.orderGrid.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -89,6 +91,17 @@ namespace OMS.UserControls
             this.CWBtn.UseVisualStyleBackColor = true;
             this.CWBtn.Click += new System.EventHandler(this.CWBtn_Click);
             // 
+            // ClearBtn
+            // 
+            this.ClearBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.ClearBtn.Location = new System.Drawing.Point(9, 951);
+            this.ClearBtn.Name = "ClearBtn";
+            this.ClearBtn.Size = new System.Drawing.Size(227, 81);
+            this.ClearBtn.TabIndex = 12;
+            this.ClearBtn.Text = "清空";
+            this.ClearBtn.UseVisualStyleBackColor = true;
+            this.ClearBtn.Click += new System.EventHandler(this.ClearBtn_Click);
+            // 
             // monthCalendar1
             // 
             this.monthCalendar1.Location = new System.Drawing.Point(9, 57);
@@ -103,18 +116,26 @@ namespace OMS.UserControls
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 25);
             this.label1.TabIndex = 14;
-            this.label1.Text = "入單";
+            this.label1.Text = "查單";
             // 
-            // UCInsertOrder
+            // monthCalendar2
+            // 
+            this.monthCalendar2.Location = new System.Drawing.Point(9, 228);
+            this.monthCalendar2.Name = "monthCalendar2";
+            this.monthCalendar2.TabIndex = 15;
+            // 
+            // UCCheckOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.monthCalendar2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.monthCalendar1);
+            this.Controls.Add(this.ClearBtn);
             this.Controls.Add(this.CWBtn);
             this.Controls.Add(this.KtBtn);
             this.Controls.Add(this.orderGrid);
-            this.Name = "UCInsertOrder";
+            this.Name = "UCCheckOrder";
             this.Size = new System.Drawing.Size(1765, 1035);
             ((System.ComponentModel.ISupportInitialize)(this.orderGrid)).EndInit();
             this.ResumeLayout(false);
@@ -127,7 +148,9 @@ namespace OMS.UserControls
         private System.Windows.Forms.DataGridView orderGrid;
         private System.Windows.Forms.Button KtBtn;
         private System.Windows.Forms.Button CWBtn;
+        private System.Windows.Forms.Button ClearBtn;
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.MonthCalendar monthCalendar2;
     }
 }

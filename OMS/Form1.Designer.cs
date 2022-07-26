@@ -39,9 +39,9 @@ namespace OMS
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
+            this.CreateInvoiceBtn = new System.Windows.Forms.Button();
             this.InsertOrderBtn = new System.Windows.Forms.Button();
+            this.CheckOrderBtn = new System.Windows.Forms.Button();
             this.ClientSetupBtn = new System.Windows.Forms.Button();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
@@ -74,9 +74,9 @@ namespace OMS
             this.flowLayoutPanel1.Controls.Add(this.button6);
             this.flowLayoutPanel1.Controls.Add(this.button7);
             this.flowLayoutPanel1.Controls.Add(this.button8);
-            this.flowLayoutPanel1.Controls.Add(this.button9);
-            this.flowLayoutPanel1.Controls.Add(this.button10);
+            this.flowLayoutPanel1.Controls.Add(this.CreateInvoiceBtn);
             this.flowLayoutPanel1.Controls.Add(this.InsertOrderBtn);
+            this.flowLayoutPanel1.Controls.Add(this.CheckOrderBtn);
             this.flowLayoutPanel1.Controls.Add(this.ClientSetupBtn);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
@@ -158,33 +158,35 @@ namespace OMS
             this.button8.Text = "button8";
             this.button8.UseVisualStyleBackColor = true;
             // 
-            // button9
+            // CreateInvoiceBtn
             // 
-            this.button9.Location = new System.Drawing.Point(3, 555);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(124, 63);
-            this.button9.TabIndex = 8;
-            this.button9.Text = "button9";
-            this.button9.UseVisualStyleBackColor = true;
-            // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(3, 624);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(124, 63);
-            this.button10.TabIndex = 9;
-            this.button10.Text = "button10";
-            this.button10.UseVisualStyleBackColor = true;
+            this.CreateInvoiceBtn.Location = new System.Drawing.Point(3, 555);
+            this.CreateInvoiceBtn.Name = "CreateInvoiceBtn";
+            this.CreateInvoiceBtn.Size = new System.Drawing.Size(124, 63);
+            this.CreateInvoiceBtn.TabIndex = 8;
+            this.CreateInvoiceBtn.Text = "發票";
+            this.CreateInvoiceBtn.UseVisualStyleBackColor = true;
+            this.CreateInvoiceBtn.Click += new System.EventHandler(this.CreateInvoiceBtn_Click);
             // 
             // InsertOrderBtn
             // 
-            this.InsertOrderBtn.Location = new System.Drawing.Point(3, 693);
+            this.InsertOrderBtn.Location = new System.Drawing.Point(3, 624);
             this.InsertOrderBtn.Name = "InsertOrderBtn";
             this.InsertOrderBtn.Size = new System.Drawing.Size(124, 63);
-            this.InsertOrderBtn.TabIndex = 10;
+            this.InsertOrderBtn.TabIndex = 9;
             this.InsertOrderBtn.Text = "入單";
             this.InsertOrderBtn.UseVisualStyleBackColor = true;
-            this.InsertOrderBtn.Click += new System.EventHandler(this.InsertOrderBtn_Click);
+            this.InsertOrderBtn.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // CheckOrderBtn
+            // 
+            this.CheckOrderBtn.Location = new System.Drawing.Point(3, 693);
+            this.CheckOrderBtn.Name = "CheckOrderBtn";
+            this.CheckOrderBtn.Size = new System.Drawing.Size(124, 63);
+            this.CheckOrderBtn.TabIndex = 10;
+            this.CheckOrderBtn.Text = "查單";
+            this.CheckOrderBtn.UseVisualStyleBackColor = true;
+            this.CheckOrderBtn.Click += new System.EventHandler(this.CheckOrderBtn_Click);
             // 
             // ClientSetupBtn
             // 
@@ -232,9 +234,9 @@ namespace OMS
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button CreateInvoiceBtn;
         private System.Windows.Forms.Button InsertOrderBtn;
+        private System.Windows.Forms.Button CheckOrderBtn;
         private System.Windows.Forms.Button ClientSetupBtn;
         private System.Windows.Forms.Panel mainPanel;
     }

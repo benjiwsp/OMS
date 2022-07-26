@@ -12,14 +12,14 @@ using OMS.Utility;
 
 namespace OMS.UserControls
 {
-    public partial class UCInsertOrder : UserControl
+    public partial class UCCheckOrder : UserControl
     {
         MySqlCommand cmd = new MySqlCommand();
         MySqlConnection myConn = DBConnection.getConn();
         MySqlDataReader rdr;
         Dictionary<string, string> location = new Dictionary<string, string>();
 
-        public UCInsertOrder()
+        public UCCheckOrder()
         {
             InitializeComponent();
             location.Add("KT", "觀塘");
@@ -28,12 +28,16 @@ namespace OMS.UserControls
 
         private void KtBtn_Click(object sender, EventArgs e)
         {
-            insertToDB("KT");
+            clearOrderGrid();
+            Button clickedBtn = (Button)sender;
+            getOrder(clickedBtn.Text);
         }
 
         private void CWBtn_Click(object sender, EventArgs e)
         {
-            insertToDB("CW");
+            clearOrderGrid();
+            Button clickedBtn = (Button)sender;
+            getOrder(clickedBtn.Text);
 
         }
         private void clearOrderGrid()
@@ -41,6 +45,25 @@ namespace OMS.UserControls
             orderGrid.Rows.Clear();
         }
 
+        private void getOrder(string site)
+        {
+            string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd 00:00:01");
+            string endTime = monthCalendar2.SelectionRange.End.ToString("yyyy-MM-dd 23:59:59");
+            cmd = new MySqlCommand($"SELECT ORDERID, CLIENT, ORDER_TYPE, PRICE, STOCK_LOCATION, PAYMENT_LOCATION, ORDER_DATE from ORDERS where STOCK_LOCATION = '{site}' AND ORDER_DATE between '{startTime}' and '{endTime}' ", myConn);
+            DBConnection.connDB();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+            da.SelectCommand = cmd;
+            rdr = cmd.ExecuteReader();
+            if (rdr.HasRows == true)
+            {
+                while (rdr.Read())
+                {
+                    orderGrid.Rows.Add(rdr["ORDERID"].ToString(), rdr["CLIENT"].ToString(), rdr["ORDER_TYPE"].ToString(), rdr["PRICE"].ToString(), rdr["STOCK_LOCATION"].ToString(), rdr["PAYMENT_LOCATION"].ToString(), rdr["ORDER_DATE"].ToString(), "更改");
+                }
+                rdr.Close();
+            }
+            DBConnection.disconnDB();
+        }
         private void AddColumnsProgrammatically()
         {
             var col1 = new DataGridViewTextBoxColumn();
@@ -53,24 +76,34 @@ namespace OMS.UserControls
             var col6 = new DataGridViewTextBoxColumn();
 
             var col7 = new DataGridViewTextBoxColumn();
+            var col8 = new DataGridViewButtonColumn();
 
 
             col1.HeaderText = "單號";
             col1.Name = "單號";
+            col1.ReadOnly = true;
             col2.HeaderText = "客戶";
             col2.Name = "客戶";
+            col2.ReadOnly = true;
             col3.HeaderText = "類別";
             col3.Name = "類別";
+            col3.ReadOnly = true;
             col4.HeaderText = "金額";
             col4.Name = "金額";
+            col4.ReadOnly = true;
             col5.HeaderText = "出單地點";
             col5.Name = "出單地點";
+            col5.ReadOnly = true;
             col6.HeaderText = "收錢地點";
             col6.Name = "收錢地點";
+            col6.ReadOnly = true;
             col7.HeaderText = "日期";
             col7.Name = "日期";
+            col7.ReadOnly = true;
+            col8.HeaderText = "更改";
+            col8.Name = "更改";
 
-            orderGrid.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col5, col6, col7 });
+            orderGrid.Columns.AddRange(new DataGridViewColumn[] { col1, col2, col3, col4, col5, col6, col7 , col8});
         }
 
 
@@ -79,17 +112,9 @@ namespace OMS.UserControls
             orderGrid.Rows.Add(orderID, cust, ordType, amount, deployLoc, paidLoc, date);
         }
 
-
-        private void insertToDB(string location)
+        private void ClearBtn_Click(object sender, EventArgs e)
         {
-            string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd 00:00:01");
-            string endTime = monthCalendar1.SelectionRange.End.ToString("yyyy-MM-dd 23:59:59");
-            string site = "";
-            string query = $"INSERT INTO ORDERS (ORDERID, CLIENTID, ORDER_TYPE, PRICE, STOCK_LOCATION, PAYMENT_LOCATION, ORDER_DATE)  {startTime}";
-            cmd = new MySqlCommand(query, myConn);
-            DBConnection.connDB();
-            cmd.ExecuteNonQuery();
-            DBConnection.disconnDB();
+            clearOrderGrid();
         }
 
         private void orderGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -104,4 +129,4 @@ namespace OMS.UserControls
             }
         }
     }
-}
+}   
