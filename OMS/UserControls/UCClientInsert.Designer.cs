@@ -139,6 +139,7 @@ namespace OMS.UserControls
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.Maroon;
+            this.button2.Enabled = false;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.button2.ForeColor = System.Drawing.Color.White;
             this.button2.Location = new System.Drawing.Point(429, 813);
@@ -147,6 +148,7 @@ namespace OMS.UserControls
             this.button2.TabIndex = 5;
             this.button2.Text = "刪除";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -423,6 +425,7 @@ namespace OMS.UserControls
             // 
             // importFromExcelBtn
             // 
+            this.importFromExcelBtn.Enabled = false;
             this.importFromExcelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.importFromExcelBtn.Location = new System.Drawing.Point(634, 723);
             this.importFromExcelBtn.Name = "importFromExcelBtn";

@@ -82,14 +82,48 @@ namespace OMS.UserControls
 
         private void insertToDB(string location)
         {
-            string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd 00:00:01");
-            string endTime = monthCalendar1.SelectionRange.End.ToString("yyyy-MM-dd 23:59:59");
-            string site = "";
-            string query = $"INSERT INTO ORDERS (ORDERID, CLIENTID, ORDER_TYPE, PRICE, STOCK_LOCATION, PAYMENT_LOCATION, ORDER_DATE)  {startTime}";
-            cmd = new MySqlCommand(query, myConn);
-            DBConnection.connDB();
-            cmd.ExecuteNonQuery();
-            DBConnection.disconnDB();
+            try
+            {
+                string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd 00:00:01");
+                string endTime = monthCalendar1.SelectionRange.End.ToString("yyyy-MM-dd 23:59:59");
+                string site = "";
+                if (orderGrid.Rows.Count > 0)
+                {
+                    DBConnection.connDB();
+
+                    foreach (DataGridViewRow row in orderGrid.Rows)
+                    {
+                        if (row.Cells[0].Value != null)
+                        {
+                            string orderID = row.Cells[0].Value.ToString();
+
+                            string clientID = row.Cells[1].Value.ToString();
+                            string orderType = row.Cells[2].Value.ToString();
+                            string price = row.Cells[3].Value.ToString();
+                            string stockLocation = row.Cells[4].Value.ToString();
+                            string payLocation = row.Cells[5].Value.ToString();
+                            string date = startTime;
+                            string query = $"INSERT INTO ORDERS (ORDERID, CLIENT, ORDER_TYPE, PRICE, STOCK_LOCATION, PAYMENT_LOCATION, ORDER_DATE) values ('{orderID}','{clientID}','{orderType}',{price},'{stockLocation}','{payLocation}','{startTime}')";
+                            cmd = new MySqlCommand(query, myConn);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    orderGrid.Rows.Clear();
+                    AddColumnsProgrammatically();
+                    DBConnection.disconnDB();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.ToLower().Contains("duplicate key"))
+                {
+                    MessageBox.Show("OrderID already exists.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void orderGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)

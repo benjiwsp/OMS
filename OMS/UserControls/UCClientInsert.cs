@@ -282,20 +282,32 @@ namespace OMS.UserControls
 
         private void ClientListCbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
-            string cSelected = ClientListCbox.SelectedItem.ToString();
-            cmd = new MySqlCommand($"SELECT CLIENT_ID, CLIENT_NAME, CREDIT from CLIENT where CLIENT_TYPE = '{cSelected}'", myConn);
-            DBConnection.connDB();
-            rdr = cmd.ExecuteReader();
-            if (rdr.HasRows == true)
+            try
             {
-                while (rdr.Read())
+                dataGridView1.Rows.Clear();
+                string cSelected = ClientListCbox.SelectedItem.ToString();
+                cmd = new MySqlCommand($"SELECT CLIENT_ID, CLIENT_NAME, CREDIT from CLIENT where CLIENT_TYPE = '{cSelected}'", myConn);
+                DBConnection.connDB();
+                rdr = cmd.ExecuteReader();
+                if (rdr.HasRows == true)
                 {
-                    dataGridView1.Rows.Add(rdr["CLIENT_ID"].ToString(), rdr["CLIENT_NAME"].ToString(), rdr["CREDIT"].ToString(), "更改");
+                    while (rdr.Read())
+                    {
+                        dataGridView1.Rows.Add(rdr["CLIENT_ID"].ToString(), rdr["CLIENT_NAME"].ToString(), rdr["CREDIT"].ToString(), "更改");
+                    }
+                    rdr.Close();
                 }
-                rdr.Close();
+                DBConnection.disconnDB();
             }
-            DBConnection.disconnDB();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

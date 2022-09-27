@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace OMS.UserControls
         MySqlCommand cmd = new MySqlCommand();
         MySqlConnection myConn = DBConnection.getConn();
         MySqlDataReader rdr;
+        Dictionary<string, Client> clientDict = new Dictionary<string, Client>();
         public UCStatement()
         {
             InitializeComponent();
@@ -64,7 +66,7 @@ namespace OMS.UserControls
             emp.OrderId = "Nikhil";
             eObj.Add(emp);
 
-            StatementGrid.DataSource = eObj;
+          //  StatementGrid.DataSource = eObj;
         }
         private void getOrder(string site)
         {
@@ -98,698 +100,382 @@ namespace OMS.UserControls
                 createInvoicePDF(index, 1, "CW - TEST", "TM - TEST");
                 //sfInvoice.PerformClick();
             }
-         //   createInvoicePDF();
+            //   createInvoicePDF();
         }
 
         private void createInvoicePDF(string Index, int receiptIndexing, string BelongTo, string comp)
         {
-            DateTime startPick = monthCalendar1.SelectionRange.Start;
-            DateTime endPick = monthCalendar2.SelectionRange.Start;
-            DateTime beginning = new DateTime(startPick.Year, startPick.Month, startPick.Day, 00, 00, 01);
-            DateTime ending = new DateTime(endPick.Year, endPick.Month, endPick.Day, 23, 59, 59);
-            DateTime today = DateTime.Now;
-            string ch_compName = "";
-            string en_compName = "";
-            string compFax = "";
-            string compTel = "";
-            string ch_add = "";
-            string en_add = "";
-            decimal custTotal = 0.0m;
-            decimal sandTotalWeight = 0.0m;
-            int pageNum = 1;
-            cmd = new MySqlCommand("Select * from CashPOSDB.companyInfo where NameCH = '" + BelongTo + "'", myConn);
-            DBConnection.connDB();
-            rdr = cmd.ExecuteReader();
-            if (rdr.HasRows)
+            try
             {
-                if (rdr.Read())
+                DateTime startPick = monthCalendar1.SelectionRange.Start;
+                DateTime endPick = monthCalendar2.SelectionRange.Start;
+                DateTime beginning = new DateTime(startPick.Year, startPick.Month, startPick.Day, 00, 00, 01);
+                DateTime ending = new DateTime(endPick.Year, endPick.Month, endPick.Day, 23, 59, 59);
+                DateTime today = DateTime.Now;
+                string ch_compName = "";
+                string en_compName = "";
+                string compFax = "";
+                string compTel = "";
+                string ch_add = "";
+                string en_add = "";
+                decimal custTotal = 0.0m;
+                decimal sandTotalWeight = 0.0m;
+                int pageNum = 1;
+                cmd = new MySqlCommand("Select * from CLIENT ", myConn);
+                DBConnection.connDB();
+                rdr = cmd.ExecuteReader();
+                if (rdr.HasRows)
                 {
-                    ch_compName = rdr["NameCH"].ToString();
-                    en_compName = rdr["NameEN"].ToString();
-                    compFax = rdr["Fax"].ToString();
-                    compTel = rdr["Phone"].ToString();
-                    ch_add = rdr["AddCH"].ToString();
-                    en_add = rdr["AddEN"].ToString();
-                }
-            }
-            rdr.Close();
-            //     myConn.Close();
-
-            string code = "", cust = "", handler = "", tel = "", fax = "", attn = "", email = "", refNo = "", quote = "", filepath = "", folderPath = "", address = "";
-            decimal sum = 0.0m;
-            int index = 1;
-            bool finish = true, filled = false, firstPage = true;
-            PdfWriter writer;
-            Document doc = null;
-            string query = "Select * from CashPOSDB.orderDetails a join CashPOSDB.orderRecords b where payment = '簽單' and a.orderID = b.orderID and b.time >=  '" +
-                beginning.ToString("yyyy-MM-dd HH:mm:ss") + "' and b.time <= '" + ending.ToString("yyyy-MM-dd HH:mm:ss") + "' and a.custCode = '" + comp + "'  and b.orderID like 'MSF%' order by a.custCode, a.time,a.orderID";
-            cmd = new MySqlCommand(query, myConn);
-            //    myConn.Open();
-            rdr = cmd.ExecuteReader();
-            if (rdr.HasRows)
-            {
-                BaseFont bf = BaseFont.CreateFont(Environment.GetEnvironmentVariable("windir") + "\\Fonts\\KAIU.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                iTextSharp.text.Font chfont = new iTextSharp.text.Font(bf, 15);
-                iTextSharp.text.Font chfontB = new iTextSharp.text.Font(bf, 17);
-                iTextSharp.text.Font chfontT = new iTextSharp.text.Font(bf, 9);
-                iTextSharp.text.Font custInfo = new iTextSharp.text.Font(bf, 11);
-                iTextSharp.text.Font infoFont = new iTextSharp.text.Font(bf, 11);
-                doc = new Document(iTextSharp.text.PageSize.A4);
-                int rowCount = 0;
-                while (rdr.Read())
-                {
-                    if (firstPage)
+                    if (rdr.Read())
                     {
-                        folderPath = "D:\\POS\\" + ch_compName + "\\發票\\" + rdr["custCode"].ToString() + rdr["custName"].ToString() + "\\" + beginning.ToString("yyyy") + "\\" + beginning.ToString("MM") + "\\";
-
-                        if (!Directory.Exists(folderPath))
-                        {
-                            Directory.CreateDirectory(folderPath);
-                        }
-                        filepath = folderPath + beginning.ToString("yyyyMM") + Index + rdr["custName"].ToString() + ".pdf";
-                        writer = PdfWriter.GetInstance(doc, new FileStream(filepath, FileMode.Create));
-                        doc.Open();
-                        firstPage = false;
+                        ch_compName = rdr["CLIENT_NAME"].ToString();
+                        en_compName = rdr["CLIENT_ID"].ToString();
+                        compFax = rdr["TEL"].ToString();
+                        compTel = rdr["TEL"].ToString();
+                        ch_add = rdr["ADDRESS"].ToString();
+                        en_add = rdr["ADDRESS"].ToString();
                     }
-                    PdfPTable titleTable = new PdfPTable(5);
-                    titleTable.WidthPercentage = 100f;
+                }
+                rdr.Close();
+                //     myConn.Close();
 
-                    PdfPTable infoTable = new PdfPTable(7);
-
-                    infoTable.WidthPercentage = 100f;
-
-                    float[] twdiths = new float[7];
-                    twdiths[0] = 40f;
-                    twdiths[1] = 10f;
-                    twdiths[2] = 85f;
-                    twdiths[3] = 80f;
-                    twdiths[4] = 80f;
-                    twdiths[5] = 10f;
-                    twdiths[6] = 80f;
-                    infoTable.SetWidths(twdiths);
-                    PdfPTable detailTable = new PdfPTable(10);
-                    detailTable.WidthPercentage = 100f;
-
-                    float[] detailWdiths = new float[10];
-                    detailWdiths[0] = 50f;
-                    detailWdiths[1] = 52f;
-                    detailWdiths[2] = 54f;
-                    detailWdiths[3] = 20f;
-                    detailWdiths[4] = 54f;
-                    detailWdiths[5] = 20f;
-                    detailWdiths[6] = 50f;
-                    detailWdiths[7] = 15f;
-                    detailWdiths[8] = 50f;
-                    detailWdiths[9] = 50f;
-
-                    detailTable.SetWidths(detailWdiths);
-
-                    PdfPTable addressTable = new PdfPTable(7);
-                    addressTable.WidthPercentage = 100f;
-
-
-
-                    //detailTable.SetWidths(detailWdiths);
-                    PdfPTable footerTable = new PdfPTable(5);
-                    footerTable.WidthPercentage = 100f;
-
-                    PdfPTable fillFooter = new PdfPTable(8);
-                    fillFooter.WidthPercentage = 100f;
-
-                    // fillFooter.SetWidths(detailWdiths);
-                    string newCode = rdr["custCode"].ToString();
-
-                    //if the page is filled 
-                    if (rowCount == 30)
+                string code = "", cust = "", handler = "", tel = "", fax = "", attn = "", email = "", refNo = "", quote = "", filepath = "", folderPath = "", address = "";
+                decimal sum = 0.0m;
+                int index = 1;
+                bool finish = true, filled = false, firstPage = true;
+                PdfWriter writer;
+                Document doc = null;
+                string query = "Select * from ORDERS";
+                cmd = new MySqlCommand(query, myConn);
+                //    myConn.Open();
+                rdr = cmd.ExecuteReader();
+                if (rdr.HasRows)
+                {
+                    BaseFont bf = BaseFont.CreateFont(Environment.GetEnvironmentVariable("windir") + "\\Fonts\\KAIU.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    iTextSharp.text.Font chfont = new iTextSharp.text.Font(bf, 15);
+                    iTextSharp.text.Font chfontB = new iTextSharp.text.Font(bf, 17);
+                    iTextSharp.text.Font chfontT = new iTextSharp.text.Font(bf, 9);
+                    iTextSharp.text.Font custInfo = new iTextSharp.text.Font(bf, 11);
+                    iTextSharp.text.Font infoFont = new iTextSharp.text.Font(bf, 11);
+                    doc = new Document(iTextSharp.text.PageSize.A4);
+                    int rowCount = 0;
+                    while (rdr.Read())
                     {
-                        pageNum++;
-                        rowCount = 0;
-                        filled = true;
-                        rowCount = 0;
-                        /*    fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString(" "), 0, 8, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString("總數:"), 0, 1, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 1, 0, 0, infoFont));*/
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                        fillFooter.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
-
-                        fillFooter.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
-
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                        fillFooter.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                        if (ch_compName.StartsWith("富"))
+                        if (firstPage)
                         {
-                            fillFooter.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                        }
-                        else
-                        {
-                            fillFooter.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
-
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                            fillFooter.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
-
-                        }
-
-
-
-                        custTotal += sum;
-                        //      MessageBox.Show(sum.ToString());
-                        doc.Add(fillFooter);
-                        sum = 0.0m;
-                    }
-
-                    if (finish || filled)
-                    {
-                        quote = rdr["custCode"].ToString() + beginning.ToString("yyMM") + Index + pageNum;
-                        index++;
-                        doc.NewPage();
-                        //tempComm = new MySqlCommand("Select * from custData where Code = '" + rdr["custCode"].ToString() + "'", tempConn);
-                        //tempConn.Open();
-                        //tempRdr = tempComm.ExecuteReader();
-                        //if (tempRdr.HasRows)
-                        //{
-                        //    if (tempRdr.Read())
-                        //    {
-                        //        code = tempRdr["Code"].ToString();
-                        //        cust = tempRdr["Name"].ToString();
-                        //        tel = tempRdr["Phone1"].ToString();
-                        //        fax = tempRdr["Fax"].ToString();
-                        //        email = tempRdr["Email"].ToString();
-                        //        address = tempRdr["Address"].ToString();
-                        //    }
-                        //}
-                        //tempRdr.Close(); tempConn.Close();
-                        sandTotalWeight = 0.0m;
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-
-
-                        titleTable.AddCell(newCell(ch_compName, 1, 5, 1, 0, chfontB));
-                        titleTable.AddCell(newCell(en_compName, 3, 5, 1, 2, chfontB));
-
-                        titleTable.AddCell(newCell(en_add, 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(ch_add, 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-                        titleTable.AddCell(newCell("Tel:" + compTel, 1, 1, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-                        titleTable.AddCell(newCell("Fax:" + compFax, 1, 1, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-
-
-
-                        doc.Add(titleTable);
-
-                        infoTable.AddCell(newCell(" ", 0, 7, 0, 0, custInfo));
-
-                        // start of customer info
-
-                        //    infoTable.AddCell(newCell("Tel No", 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //    infoTable.AddCell(newCell(tel, 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell("", 0, 4, 0, 0, custInfo));
-                        //     infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
-                        //      infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //      infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
-
-                        //  infoTable.AddCell(newCell("Fax No", 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //  infoTable.AddCell(newCell(fax, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Customer", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(code, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Date", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(ending.ToString("yyyy-MM-dd"), 0, 1, 0, 0, custInfo));
-
-                        infoTable.AddCell(newCell("TO", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(cust, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
-
-                        //         infoTable.AddCell(newCell("地址", 0, 1, 0, 0, custInfo));
-                        //        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //         infoTable.AddCell(newCell(address, 0, 6, 0, 0, custInfo));
-
-
-                        infoTable.AddCell(newCell("Address", 0, 1, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        PdfPCell addressCell = newCell(address, 0, 1, 0, 0, custInfo);
-                        infoTable.AddCell(addressCell);
-                        infoTable.AddCell(newCell(" ", 0, 3, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(" ", 0, 7, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(" ", 3, 7, 0, 0, infoFont));
-
-                        infoTable.AddCell(newCell("發票", 1, 7, 1, 0, infoFont));
-                        infoTable.AddCell(newCell("Invoice", 1, 7, 1, 0, infoFont));
-                        doc.Add(infoTable);
-
-                        doc.Add(addressTable);
-                        detailTable.AddCell(newCell("單號", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("日期", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("貨品", 2, 3, 0, 2, chfontT));
-                        detailTable.AddCell(newCell("類", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("數量", 2, 1, 2, 2, chfontT));
-                        detailTable.AddCell(newCell(" ", 2, 1, 0, 2, chfontT));
-                        detailTable.AddCell(newCell("單價", 2, 1, 2, 2, chfontT));
-                        detailTable.AddCell(newCell("總數(港幣)", 2, 1, 2, 2, chfontT));
-                        finish = false;
-                        filled = false;
-                    }
-                    detailTable.AddCell(newCell(rdr["orderID"].ToString(), 1, 1, 0, 0, infoFont));
-
-                    detailTable.AddCell(newCell(Convert.ToDateTime(rdr["time"]).ToString("dd-MM-yy"), 1, 1, 0, 0, infoFont));
-
-                    detailTable.AddCell(newCell(rdr["itemName"].ToString(), 1, 3, 0, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["priceType"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
-
-                    detailTable.AddCell(newCell(rdr["amount"].ToString(), 1, 1, 2, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["unit"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["unitPrice"].ToString(), 1, 1, 2, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["total"].ToString(), 1, 1, 2, 0, infoFont));
-                    sum += Convert.ToDecimal(rdr["total"].ToString());
-                    doc.Add(detailTable);
-                    rowCount++;
-                    if (rdr["itemName"].ToString() == "洗水沙" || rdr["itemName"].ToString() == "天然沙")
-                    {
-                        sandTotalWeight += Convert.ToDecimal(rdr["amount"].ToString());
-                    }
-
-                }
-
-                PdfPTable footer = new PdfPTable(8);
-                footer.WidthPercentage = 100f;
-                while (rowCount < 30)
-                {
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    rowCount++;
-                }
-                rowCount = 0;
-                footer.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                footer.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
-                footer.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
-                footer.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
-
-                footer.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
-                footer.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
-
-                footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                footer.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
-                footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                if (ch_compName.StartsWith("富"))
-                {
-                    footer.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                }
-                else
-                {
-                    footer.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                }
-
-
-                footer.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
-
-
-
-
-                custTotal += sum;
-                //   MessageBox.Show(sum.ToString());
-                // MessageBox.Show("this is total " + custTotal);
-                sum = 0.0m;
-                //  footer.AddCell(newCell("客戶總數:", 0, 7, 0, 2, infoFont));
-                //footer.AddCell(newCell(custTotal.ToString("0.00"), 0, 2, 2, 2, infoFont));
-                custTotal = 0;
-                doc.Add(footer);
-                //   doc.Close();
-                //   myConn.Close();
-
-            }
-
-
-            //invoice for sand order
-            // index++;
-            pageNum++;
-            finish = true;
-
-            query = "Select * from CashPOSDB.orderDetails a join CashPOSDB.orderRecords b where payment = '簽單' and a.orderID = b.orderID and b.time >=  '" +
-          beginning.ToString("yyyy-MM-dd HH:mm:ss") + "' and b.time <= '" + ending.ToString("yyyy-MM-dd HH:mm:ss") + "' and a.custCode = '" + comp + "' and b.orderID not like 'MSF%' order by a.custCode, a.time,a.orderID";
-            cmd = new MySqlCommand(query, myConn);
-            //      myConn.Open();
-            rdr.Close();
-            rdr = cmd.ExecuteReader();
-            if (rdr.HasRows)
-            {
-                BaseFont bf = BaseFont.CreateFont(Environment.GetEnvironmentVariable("windir") + "\\Fonts\\KAIU.TTF", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                iTextSharp.text.Font chfont = new iTextSharp.text.Font(bf, 15);
-                iTextSharp.text.Font chfontB = new iTextSharp.text.Font(bf, 17);
-                iTextSharp.text.Font chfontT = new iTextSharp.text.Font(bf, 9);
-                iTextSharp.text.Font custInfo = new iTextSharp.text.Font(bf, 11);
-                iTextSharp.text.Font infoFont = new iTextSharp.text.Font(bf, 11);
-                // Document doc = new Document(iTextSharp.text.PageSize.A4);
-                int rowCount = 0;
-
-                while (rdr.Read())
-                {
-                    if (firstPage)
-                    {
-                        if (doc == null)
-                        {
-                            pageNum--;
-                            doc = new Document(iTextSharp.text.PageSize.A4);
-                            folderPath = "D:\\POS\\" + ch_compName + "\\發票\\" + rdr["custCode"].ToString() + rdr["custName"].ToString() + "\\" + beginning.ToString("yyyy") + "\\" + beginning.ToString("MM") + "\\";
+                            folderPath = "D:\\POS\\" + ch_compName + "\\發票\\" + rdr["CLIENT"].ToString() + rdr["ORDERID"].ToString() + "\\" + beginning.ToString("yyyy") + "\\" + beginning.ToString("MM") + "\\";
 
                             if (!Directory.Exists(folderPath))
                             {
                                 Directory.CreateDirectory(folderPath);
                             }
-                            filepath = folderPath + beginning.ToString("yyyyMM") + Index + rdr["custName"].ToString() + ".pdf";
-
+                            filepath = folderPath + beginning.ToString("yyyyMM") + Index + rdr["CLIENT"].ToString() + ".pdf";
                             writer = PdfWriter.GetInstance(doc, new FileStream(filepath, FileMode.Create));
                             doc.Open();
                             firstPage = false;
                         }
-                        doc.NewPage();
+                        PdfPTable titleTable = new PdfPTable(5);
+                        titleTable.WidthPercentage = 100f;
 
-                    }
-                    PdfPTable titleTable = new PdfPTable(5);
-                    titleTable.WidthPercentage = 100f;
+                        PdfPTable infoTable = new PdfPTable(7);
 
-                    PdfPTable infoTable = new PdfPTable(7);
+                        infoTable.WidthPercentage = 100f;
 
-                    infoTable.WidthPercentage = 100f;
+                        float[] twdiths = new float[7];
+                        twdiths[0] = 40f;
+                        twdiths[1] = 10f;
+                        twdiths[2] = 85f;
+                        twdiths[3] = 80f;
+                        twdiths[4] = 80f;
+                        twdiths[5] = 10f;
+                        twdiths[6] = 80f;
+                        infoTable.SetWidths(twdiths);
+                        PdfPTable detailTable = new PdfPTable(10);
+                        detailTable.WidthPercentage = 100f;
 
-                    float[] twdiths = new float[7];
-                    twdiths[0] = 40f;
-                    twdiths[1] = 10f;
-                    twdiths[2] = 85f;
-                    twdiths[3] = 80f;
-                    twdiths[4] = 80f;
-                    twdiths[5] = 10f;
-                    twdiths[6] = 80f;
-                    infoTable.SetWidths(twdiths);
-                    PdfPTable detailTable = new PdfPTable(10);
-                    detailTable.WidthPercentage = 100f;
+                        float[] detailWdiths = new float[10];
+                        detailWdiths[0] = 50f;
+                        detailWdiths[1] = 52f;
+                        detailWdiths[2] = 54f;
+                        detailWdiths[3] = 20f;
+                        detailWdiths[4] = 54f;
+                        detailWdiths[5] = 20f;
+                        detailWdiths[6] = 50f;
+                        detailWdiths[7] = 15f;
+                        detailWdiths[8] = 50f;
+                        detailWdiths[9] = 50f;
 
-                    float[] detailWdiths = new float[10];
-                    detailWdiths[0] = 50f;
-                    detailWdiths[1] = 52f;
-                    detailWdiths[2] = 54f;
-                    detailWdiths[3] = 20f;
-                    detailWdiths[4] = 54f;
-                    detailWdiths[5] = 20f;
-                    detailWdiths[6] = 50f;
-                    detailWdiths[7] = 15f;
-                    detailWdiths[8] = 50f;
-                    detailWdiths[9] = 50f;
+                        detailTable.SetWidths(detailWdiths);
 
-                    detailTable.SetWidths(detailWdiths);
-
-                    PdfPTable addressTable = new PdfPTable(7);
-                    addressTable.WidthPercentage = 100f;
+                        PdfPTable addressTable = new PdfPTable(7);
+                        addressTable.WidthPercentage = 100f;
 
 
 
-                    //detailTable.SetWidths(detailWdiths);
-                    PdfPTable footerTable = new PdfPTable(5);
-                    footerTable.WidthPercentage = 100f;
+                        //detailTable.SetWidths(detailWdiths);
+                        PdfPTable footerTable = new PdfPTable(5);
+                        footerTable.WidthPercentage = 100f;
 
-                    PdfPTable fillFooter = new PdfPTable(8);
-                    fillFooter.WidthPercentage = 100f;
+                        PdfPTable fillFooter = new PdfPTable(8);
+                        fillFooter.WidthPercentage = 100f;
 
-                    // fillFooter.SetWidths(detailWdiths);
-                    string newCode = rdr["custCode"].ToString();
+                        // fillFooter.SetWidths(detailWdiths);
+                        string newCode = rdr["CLIENT"].ToString();
 
-                    //if the page is filled 
-                    if (rowCount == 30)
-                    {
-                        pageNum++;
-                        rowCount = 0;
-                        filled = true;
-                        rowCount = 0;
-                        /*    fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString(" "), 0, 8, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString("總數:"), 0, 1, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 1, 0, 0, infoFont));*/
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                        fillFooter.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
-
-                        fillFooter.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
-
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                        fillFooter.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
-                        fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                        if (ch_compName.StartsWith("富"))
+                        //if the page is filled 
+                        if (rowCount == 30)
                         {
-                            fillFooter.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                            pageNum++;
+                            rowCount = 0;
+                            filled = true;
+                            rowCount = 0;
+                            /*    fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
+                                fillFooter.AddCell(newCell(sum.ToString(" "), 0, 8, 0, 0, infoFont));
+                                fillFooter.AddCell(newCell(sum.ToString("總數:"), 0, 1, 0, 0, infoFont));
+                                fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 1, 0, 0, infoFont));*/
+                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
+                            fillFooter.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
+                            fillFooter.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
+                            fillFooter.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
+
+                            fillFooter.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
+                            fillFooter.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
+
                             fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
 
+                            fillFooter.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
+                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                            if (ch_compName.StartsWith("富"))
+                            {
+                                fillFooter.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
+                                fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                                fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+
+                            }
+                            else
+                            {
+                                fillFooter.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
+
+                                fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                                fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+
+                                fillFooter.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
+
+                            }
+
+
+
+                            custTotal += sum;
+                            //      MessageBox.Show(sum.ToString());
+                            doc.Add(fillFooter);
+                            sum = 0.0m;
                         }
-                        else
+
+                        if (finish || filled)
                         {
-                            fillFooter.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
+                            quote = rdr["CLIENT"].ToString() + beginning.ToString("yyMM") + Index + pageNum;
+                            index++;
+                            doc.NewPage();
+                            //tempComm = new MySqlCommand("Select * from custData where Code = '" + rdr["custCode"].ToString() + "'", tempConn);
+                            //tempConn.Open();
+                            //tempRdr = tempComm.ExecuteReader();
+                            //if (tempRdr.HasRows)
+                            //{
+                            //    if (tempRdr.Read())
+                            //    {
+                            //        code = tempRdr["Code"].ToString();
+                            //        cust = tempRdr["Name"].ToString();
+                            //        tel = tempRdr["Phone1"].ToString();
+                            //        fax = tempRdr["Fax"].ToString();
+                            //        email = tempRdr["Email"].ToString();
+                            //        address = tempRdr["Address"].ToString();
+                            //    }
+                            //}
+                            //tempRdr.Close(); tempConn.Close();
+                            sandTotalWeight = 0.0m;
+                            titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
+                            titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
+                            titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
 
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                            fillFooter.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
 
-                            fillFooter.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
+                            titleTable.AddCell(newCell(ch_compName, 1, 5, 1, 0, chfontB));
+                            titleTable.AddCell(newCell(en_compName, 3, 5, 1, 2, chfontB));
 
+                            titleTable.AddCell(newCell(en_add, 1, 5, 1, 0, chfontT));
+                            titleTable.AddCell(newCell(ch_add, 1, 5, 1, 0, chfontT));
+                            titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
+
+                            titleTable.AddCell(newCell("Tel:" + compTel, 1, 1, 1, 0, chfontT));
+                            titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
+
+                            titleTable.AddCell(newCell("Fax:" + compFax, 1, 1, 1, 0, chfontT));
+                            titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
+
+
+
+
+                            doc.Add(titleTable);
+
+                            infoTable.AddCell(newCell(" ", 0, 7, 0, 0, custInfo));
+
+                            // start of customer info
+
+                            //    infoTable.AddCell(newCell("Tel No", 0, 1, 0, 0, custInfo));
+                            //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            //    infoTable.AddCell(newCell(tel, 0, 1, 0, 0, custInfo));
+                            //   infoTable.AddCell(newCell("", 0, 4, 0, 0, custInfo));
+                            //     infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
+                            //      infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            //      infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
+
+                            //  infoTable.AddCell(newCell("Fax No", 0, 1, 0, 0, custInfo));
+                            //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            //  infoTable.AddCell(newCell(fax, 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell("Customer", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(code, 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell("Date", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(ending.ToString("yyyy-MM-dd"), 0, 1, 0, 0, custInfo));
+
+                            infoTable.AddCell(newCell("TO", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(cust, 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
+
+                            //         infoTable.AddCell(newCell("地址", 0, 1, 0, 0, custInfo));
+                            //        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            //         infoTable.AddCell(newCell(address, 0, 6, 0, 0, custInfo));
+
+
+                            infoTable.AddCell(newCell("Address", 0, 1, 0, 0, infoFont));
+                            infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
+                            PdfPCell addressCell = newCell(address, 0, 1, 0, 0, custInfo);
+                            infoTable.AddCell(addressCell);
+                            infoTable.AddCell(newCell(" ", 0, 3, 0, 0, infoFont));
+                            infoTable.AddCell(newCell(" ", 0, 7, 0, 0, infoFont));
+                            infoTable.AddCell(newCell(" ", 3, 7, 0, 0, infoFont));
+
+                            infoTable.AddCell(newCell("發票", 1, 7, 1, 0, infoFont));
+                            infoTable.AddCell(newCell("Invoice", 1, 7, 1, 0, infoFont));
+                            doc.Add(infoTable);
+
+                            doc.Add(addressTable);
+                            detailTable.AddCell(newCell("單號", 2, 1, 0, 2, chfontT));
+
+                            detailTable.AddCell(newCell("日期", 2, 1, 0, 2, chfontT));
+
+                            detailTable.AddCell(newCell("貨品", 2, 3, 0, 2, chfontT));
+                            detailTable.AddCell(newCell("類", 2, 1, 0, 2, chfontT));
+
+                            detailTable.AddCell(newCell("數量", 2, 1, 2, 2, chfontT));
+                            detailTable.AddCell(newCell(" ", 2, 1, 0, 2, chfontT));
+                            detailTable.AddCell(newCell("單價", 2, 1, 2, 2, chfontT));
+                            detailTable.AddCell(newCell("總數(港幣)", 2, 1, 2, 2, chfontT));
+                            finish = false;
+                            filled = false;
                         }
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString(), 1, 1, 0, 0, infoFont));
 
+                        detailTable.AddCell(newCell(Convert.ToDateTime(rdr["ORDER_DATE"]).ToString("dd-MM-yy"), 1, 1, 0, 0, infoFont));
 
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString(), 1, 3, 0, 0, infoFont));
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
 
-                        custTotal += sum;
-                        //      MessageBox.Show(sum.ToString());
-                        doc.Add(fillFooter);
-                        sum = 0.0m;
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString(), 1, 1, 2, 0, infoFont));
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString(), 1, 1, 2, 0, infoFont));
+                        detailTable.AddCell(newCell(rdr["ORDERID"].ToString(), 1, 1, 2, 0, infoFont));
+                        // sum += Convert.ToDecimal(rdr["ORDERID"].ToString());
+                        doc.Add(detailTable);
+                        rowCount++;
+
                     }
 
-                    if (finish || filled)
+                    PdfPTable footer = new PdfPTable(8);
+                    footer.WidthPercentage = 100f;
+                    while (rowCount < 30)
                     {
-                        quote = rdr["custCode"].ToString() + beginning.ToString("yyMM") + Index + pageNum;
-                        index++;
-                        doc.NewPage();
-                        //tempComm = new MySqlCommand("Select * from custData where Code = '" + rdr["custCode"].ToString() + "'", tempConn);
-                        //tempConn.Open();
-                        //tempRdr = tempComm.ExecuteReader();
-                        //if (tempRdr.HasRows)
-                        //{
-                        //    if (tempRdr.Read())
-                        //    {
-                        //        code = tempRdr["Code"].ToString();
-                        //        cust = tempRdr["Name"].ToString();
-                        //        tel = tempRdr["Phone1"].ToString();
-                        //        fax = tempRdr["Fax"].ToString();
-                        //        email = tempRdr["Email"].ToString();
-                        //        address = tempRdr["Address"].ToString();
-                        //    }
-                        //}
-                        //tempRdr.Close(); tempConn.Close();
-                        sandTotalWeight = 0.0m;
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(" ", 1, 5, 1, 0, chfontT));
-
-
-                        titleTable.AddCell(newCell(ch_compName, 1, 5, 1, 0, chfontB));
-                        titleTable.AddCell(newCell(en_compName, 3, 5, 1, 2, chfontB));
-
-                        titleTable.AddCell(newCell(en_add, 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell(ch_add, 1, 5, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-                        titleTable.AddCell(newCell("Tel:" + compTel, 1, 1, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-                        titleTable.AddCell(newCell("Fax:" + compFax, 1, 1, 1, 0, chfontT));
-                        titleTable.AddCell(newCell("", 1, 1, 0, 0, chfontT));
-
-
-
-
-                        doc.Add(titleTable);
-
-                        infoTable.AddCell(newCell(" ", 0, 7, 0, 0, custInfo));
-
-                        // start of customer info
-
-                        //    infoTable.AddCell(newCell("Tel No", 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //    infoTable.AddCell(newCell(tel, 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell("", 0, 4, 0, 0, custInfo));
-                        //     infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
-                        //      infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //      infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
-
-                        //  infoTable.AddCell(newCell("Fax No", 0, 1, 0, 0, custInfo));
-                        //   infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //  infoTable.AddCell(newCell(fax, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Customer", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(code, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Date", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(ending.ToString("yyyy-MM-dd"), 0, 1, 0, 0, custInfo));
-
-                        infoTable.AddCell(newCell("TO", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(cust, 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell("Invoice No", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        infoTable.AddCell(newCell(quote, 0, 1, 0, 0, custInfo));
-
-                        //         infoTable.AddCell(newCell("地址", 0, 1, 0, 0, custInfo));
-                        //        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        //         infoTable.AddCell(newCell(address, 0, 6, 0, 0, custInfo));
-
-
-                        infoTable.AddCell(newCell("Address", 0, 1, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(":", 0, 1, 0, 0, custInfo));
-                        PdfPCell addressCell = newCell(address, 0, 1, 0, 0, custInfo);
-                        infoTable.AddCell(addressCell);
-                        infoTable.AddCell(newCell(" ", 0, 3, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(" ", 0, 7, 0, 0, infoFont));
-                        infoTable.AddCell(newCell(" ", 3, 7, 0, 0, infoFont));
-
-                        infoTable.AddCell(newCell("發票", 1, 7, 1, 0, infoFont));
-                        infoTable.AddCell(newCell("Invoice", 1, 7, 1, 0, infoFont));
-                        doc.Add(infoTable);
-
-                        doc.Add(addressTable);
-                        detailTable.AddCell(newCell("單號", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("日期", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("貨品", 2, 3, 0, 2, chfontT));
-                        detailTable.AddCell(newCell("類", 2, 1, 0, 2, chfontT));
-
-                        detailTable.AddCell(newCell("數量", 2, 1, 2, 2, chfontT));
-                        detailTable.AddCell(newCell(" ", 2, 1, 0, 2, chfontT));
-                        detailTable.AddCell(newCell("單價", 2, 1, 2, 2, chfontT));
-                        detailTable.AddCell(newCell("總數(港幣)", 2, 1, 2, 2, chfontT));
-                        finish = false;
-                        filled = false;
+                        footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                        rowCount++;
                     }
-                    detailTable.AddCell(newCell(rdr["orderID"].ToString(), 1, 1, 0, 0, infoFont));
+                    rowCount = 0;
+                    footer.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
+                    footer.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
+                    footer.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
+                    footer.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
 
-                    detailTable.AddCell(newCell(Convert.ToDateTime(rdr["time"]).ToString("dd-MM-yy"), 1, 1, 0, 0, infoFont));
+                    footer.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
+                    footer.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
 
-                    detailTable.AddCell(newCell(rdr["itemName"].ToString(), 1, 3, 0, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["priceType"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
+                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
 
-                    detailTable.AddCell(newCell(rdr["amount"].ToString(), 1, 1, 2, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["unit"].ToString().Substring(0, 1), 1, 1, 0, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["unitPrice"].ToString(), 1, 1, 2, 0, infoFont));
-                    detailTable.AddCell(newCell(rdr["total"].ToString(), 1, 1, 2, 0, infoFont));
-                    sum += Convert.ToDecimal(rdr["total"].ToString());
-                    doc.Add(detailTable);
-                    rowCount++;
-                    if (rdr["itemName"].ToString() == "洗水沙" || rdr["itemName"].ToString() == "天然沙")
+                    footer.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
+                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                    if (ch_compName.StartsWith("富"))
                     {
-                        sandTotalWeight += Convert.ToDecimal(rdr["amount"].ToString());
+                        footer.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
+                        footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                        footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+
+                    }
+                    else
+                    {
+                        footer.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
+                        footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                        footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+
                     }
 
+
+                    footer.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
+
+
+
+
+                    custTotal += sum;
+                    //   MessageBox.Show(sum.ToString());
+                    // MessageBox.Show("this is total " + custTotal);
+                    sum = 0.0m;
+                    //  footer.AddCell(newCell("客戶總數:", 0, 7, 0, 2, infoFont));
+                    //footer.AddCell(newCell(custTotal.ToString("0.00"), 0, 2, 2, 2, infoFont));
+                    custTotal = 0;
+                    doc.Add(footer);
+                    //   doc.Close();
+                    //   myConn.Close();
+
                 }
 
-                PdfPTable footer = new PdfPTable(8);
-                footer.WidthPercentage = 100f;
-                while (rowCount < 30)
+
+                //invoice for sand order
+                // index++;
+                pageNum++;
+                finish = true;
+
+
+                if (doc.IsOpen())
                 {
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    rowCount++;
-                }
-                rowCount = 0;
-                footer.AddCell(newCell(" ", 0, 10, 0, 2, infoFont));
-                footer.AddCell(newCell(" ", 0, 4, 0, 0, infoFont));
-                footer.AddCell(newCell("總噸數:", 0, 1, 0, 0, infoFont));
-                footer.AddCell(newCell(sandTotalWeight.ToString("0.00"), 0, 1, 0, 0, infoFont));
-
-                footer.AddCell(newCell("總數:", 0, 1, 0, 0, infoFont));
-                footer.AddCell(newCell(sum.ToString("0.00"), 0, 2, 2, 0, infoFont));
-
-                footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-
-                footer.AddCell(newCell("請於收貨後30天內付清貨款.", 0, 10, 0, 0, infoFont));
-                footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                if (ch_compName.StartsWith("富"))
-                {
-                    footer.AddCell(newCell("富資建業有限公司", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                    doc.Close();
 
                 }
-                else
-                {
-                    footer.AddCell(newCell("超誠建築材料倉有限公司", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
-                    footer.AddCell(newCell(" ", 0, 10, 0, 0, infoFont));
+                myConn.Close();
 
-                }
+                cmd = new MySqlCommand("update CashPOSDB.custData set LastInvGenS = '" + beginning.ToString("yyyy-MM-dd") + "', LastInvGenE = '" + ending.ToString("yyyy-MM-dd") + "' where Code = '" + comp + "'", myConn);
+                DBConnection.connDB();
+                cmd.ExecuteNonQuery();
+                myConn.Close();
 
-
-                footer.AddCell(newCell("多謝惠顧 祝生意興隆", 0, 10, 1, 0, infoFont));
-
-
-
-
-                custTotal += sum;
-                //   MessageBox.Show(sum.ToString());
-                // MessageBox.Show("this is total " + custTotal);
-                sum = 0.0m;
-                //  footer.AddCell(newCell("客戶總數:", 0, 7, 0, 2, infoFont));
-                //footer.AddCell(newCell(custTotal.ToString("0.00"), 0, 2, 2, 2, infoFont));
-                custTotal = 0;
-                doc.Add(footer);
-                //     doc.Close();
-
+                //  searchForInv(BelongTo.Substring(0, 2));
             }
-            if (doc.IsOpen())
+            catch (Exception ex)
             {
-                doc.Close();
-
+                MessageBox.Show(ex.Message);
             }
-            myConn.Close();
-
-            cmd = new MySqlCommand("update CashPOSDB.custData set LastInvGenS = '" + beginning.ToString("yyyy-MM-dd") + "', LastInvGenE = '" + ending.ToString("yyyy-MM-dd") + "' where Code = '" + comp + "'", myConn);
-            DBConnection.connDB();
-            cmd.ExecuteNonQuery();
-            myConn.Close();
-
-          //  searchForInv(BelongTo.Substring(0, 2));
         }
-
         private PdfPCell newCell(iTextSharp.text.Phrase phrase, int colSpan)
         {
             PdfPCell cell = new PdfPCell(phrase);
@@ -834,6 +520,107 @@ namespace OMS.UserControls
             doc.Add(table);
         }
 
+        private void CW_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void refreshClientCB_Click(object sender, EventArgs e)
+        {
+            foreach (string item in getClientList())
+            {
+                clientListCB.Items.Add(item);
+
+            }
+        }
+        private List<string> getClientList()
+        {
+            clientDict.Clear();
+            List<string> result = new List<string>();
+            string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd 00:00:01");
+            string endTime = monthCalendar2.SelectionRange.End.ToString("yyyy-MM-dd 23:59:59");
+            cmd = new MySqlCommand($"SELECT * FROM CLIENT", myConn);
+            DBConnection.connDB();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+            da.SelectCommand = cmd;
+            rdr = cmd.ExecuteReader();
+            if (rdr.HasRows == true)
+            {
+                while (rdr.Read())
+                {
+                    result.Add(rdr["CLIENT_ID"].ToString());
+
+                    Client newClient = new Client();
+                    string clientID = rdr["CLIENT_ID"].ToString();
+                    newClient.ClientID = clientID;
+                    newClient.ClientName = rdr["CLIENT_NAME"].ToString();
+                    newClient.Address = rdr["ADDRESS"].ToString();
+                    newClient.Tel = rdr["TEL"].ToString();
+                    newClient.Contact = rdr["CONTACT_PERSON"].ToString();
+                    newClient.Credit = Convert.ToDouble(rdr["CREDIT"].ToString());
+                    newClient.cType = rdr["CLIENT_TYPE"].ToString();
+
+
+
+                    clientDict.Add(clientID, newClient);
+
+
+                }
+                rdr.Close();
+            }
+            DBConnection.disconnDB();
+            return result;
+        }
+
+        private void clientListCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /*
+             * grab order from it in selected time period
+             * 
+             * 
+             */
+
+            string selected = clientListCB.SelectedItem.ToString();
+            string startTime = monthCalendar1.SelectionRange.Start.ToString("yyyy-MM-dd");
+            string endTime = monthCalendar2.SelectionRange.End.ToString("yyyy-MM-dd");
+            string clientID = selected.Split('-')[0].Trim();
+            cmd = new MySqlCommand($"SELECT * FROM ORDERS WHERE  CLIENT = '{clientID}' AND  ORDER_DATE >= '{startTime}'  AND ORDER_DATE <=  '{endTime}' ", myConn);
+            DBConnection.connDB();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+            da.SelectCommand = cmd;
+            rdr = cmd.ExecuteReader();
+            if (rdr.HasRows == true)
+            {
+                StatementGrid.Columns.Add("單號", "單號");
+                StatementGrid.Columns.Add("客戶", "客戶");
+                StatementGrid.Columns.Add("類別", "類別");
+                StatementGrid.Columns.Add("金額", "金額");
+                StatementGrid.Columns.Add("出貨地點", "出貨地點");
+                StatementGrid.Columns.Add("付款地點", "付款地點");
+                StatementGrid.Columns.Add("日期", "日期");
+              //  StatementGrid.Columns.Add("單號", "單號");
+
+                while (rdr.Read())
+                {
+
+                    string orderID = rdr["ORDERID"].ToString();
+                    string Client = rdr["CLIENT"].ToString();
+                    string orderType = rdr["ORDER_TYPE"].ToString();
+                    double price = Convert.ToDouble(rdr["PRICE"].ToString());
+                    string stockLocation = rdr["STOCK_LOCATION"].ToString();
+                    string payLocation = rdr["PAYMENT_LOCATION"].ToString();
+                    DateTime result;
+                    DateTime.TryParseExact(rdr["ORDER_DATE"].ToString(), "yyyy/MM/dd",
+                             CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+
+
+                    StatementGrid.Rows.Add(orderID, Client, orderType, price, stockLocation, payLocation, result);
+                }
+                rdr.Close();
+            }
+            DBConnection.disconnDB();
+
+        }
     }
     public class Statement
     {
@@ -843,5 +630,16 @@ namespace OMS.UserControls
         public double TotalPrice { get; set; }
         public string Date { get; set; }
 
+    }
+    public class Client
+    {
+        public string ClientID { get; set; }
+        public string ClientName { get; set; }
+        public string Address { get; set; }
+        public string Tel { get; set; }
+        public string Contact { get; set; }
+        public double Credit { get; set; }
+        public string cType { get; set; }
+        public DateTime Date { get; set; }
     }
 }
